@@ -1,11 +1,40 @@
 @import './vendor/normalize.css';
+@import './vendor/fonts/inter.css';
+
+:root {
+    --color-text: #fff;
+    --color-text-label: #8b8b8b;
+    --color-text-reverse: #000;
+    --color-main-bg: #202020;
+    --color-section-bg: #272727;
+    --color-label-bg: #303030;
+    --color-card-bg: #222;
+    --color-accent: #3ddc84;
+    --color-secondary: #4285f4;
+    --color-danger: #ee3465;
+    --color-section-border: #dadada;
+    --color-icon-bg: #313131;
+    --color-border-line: #424242;
+    --color-border: rgba(170, 170, 170, .8);
+
+    --transition-duration: 200ms;
+    --transition-timing-funciton: ease-in-out;
+
+    --font-main: 'Inter', 'Arial', sans-serif;
+    --font-size: 14px;
+
+    --color-theme-dark: #202020;
+    --color-theme-light: #aaa;
+    --color-text-theme-light: #333;
+    --color-text-theme-dark: #fff;
+}
 
 * {
     box-sizing: border-box;
 }
 
 body {
-    /*font-family: 'PT-Root-UI', sans-serif;*/
-    font-size: 16px;
+    font-family: var(--font-main);
+    font-size: var(--font-size);
     line-height: 1.5;
 }
