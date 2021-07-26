@@ -1,0 +1,28 @@
+.label-list {
+    display: flex;
+    justify-content: center;
+}
+
+.label-list__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.label-list__item {
+    margin-right: 10px;
+    border-radius: 10px;
+    height: 60px;
+    width: 90px;
+    background-color: var(--color-label-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.label-list__item:last-child {
+    margin-right: 0;
+}
+

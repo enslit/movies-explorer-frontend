@@ -1,8 +1,9 @@
 import React from 'react';
 import './SavedMovies.css';
+import Container from '../Container/Container';
 
 const SavedMovies = () => {
-  return <div>SavedMovies</div>;
+  return <Container>SavedMovies</Container>;
 };
 
 export default SavedMovies;

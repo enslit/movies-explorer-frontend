@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import './Navigation.css';
 import { useAuth } from '../../hooks/useAuth';
 import { NavLink } from 'react-router-dom';
+import NavButton from '../NavButton/NavButton';
 
 const Navigation = () => {
   const { isLoggedIn } = useAuth();
@@ -27,27 +28,9 @@ const Navigation = () => {
             Сохраненные фильмы
           </NavLink>
         </li>
-        <li className="navigation__item">
-          <NavLink
-            activeClassName="navigation__link_active"
-            className="navigation__link navigation__link_type_profile"
-            to="/profile"
-          >
-            Аккаунт
-          </NavLink>
-        </li>
       </>
     ) : (
       <>
-        <li className="navigation__item">
-          <NavLink
-            activeClassName="navigation__link_active"
-            className="navigation__link navigation__link_type_login"
-            to="/signin"
-          >
-            Войти
-          </NavLink>
-        </li>
         <li className="navigation__item">
           <NavLink
             activeClassName="navigation__link_active"
@@ -64,6 +47,7 @@ const Navigation = () => {
   return (
     <nav className="navigation">
       <ul className="navigation__list">{navigation}</ul>
+      <NavButton isLoggedIn={isLoggedIn} />
     </nav>
   );
 };

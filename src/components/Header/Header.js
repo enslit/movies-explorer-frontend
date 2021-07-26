@@ -1,14 +1,19 @@
 import React from 'react';
 import './Header.css';
 import Navigation from '../Navigation/Navigation';
-import { Link } from 'react-router-dom';
+import Container from '../Container/Container';
+import Logo from '../Logo/Logo';
 
 const Header = () => {
   return (
-    <div className="header">
-      <Link to="/">Logo</Link>
-      <Navigation />
-    </div>
+    <header className="header">
+      <Container>
+        <div className="header__container">
+          <Logo />
+          <Navigation />
+        </div>
+      </Container>
+    </header>
   );
 };
 

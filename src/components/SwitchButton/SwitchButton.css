@@ -1,0 +1,41 @@
+.switch-button {
+    display: inline-flex;
+    align-items: center;
+}
+
+.switch-button:hover {
+    cursor: pointer;
+}
+
+.switch-button__switch {
+    margin-right: 14px;
+    display: inline-block;
+    height: 20px;
+    width: 36px;
+    border-radius: 20px;
+    background-color: var(--color-text-label);
+    position: relative;
+    transition: background-color var(--transition-duration) var(--transition-timing-funciton);
+}
+
+.switch-button__switch:before {
+    content: '';
+    display: block;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: var(--color-text);
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    transition: left var(--transition-duration) var(--transition-timing-funciton), right var(--transition-duration) var(--transition-timing-funciton);
+}
+
+.switch-button__switch_active {
+    background-color: var(--color-accent);
+}
+
+.switch-button__switch_active:before {
+    left: calc(100% - 16px);
+}

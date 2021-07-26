@@ -1,3 +1,12 @@
-.App {
-    padding: 15px;
+.app {
+    min-height: 100vh;
+    background-color: var(--color-main-bg);
+    color: var(--color-text);
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+}
+
+.app_loading {
+    grid-template-rows: 1vh;
+    place-content: center;
 }

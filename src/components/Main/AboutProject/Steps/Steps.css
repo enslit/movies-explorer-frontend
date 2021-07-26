@@ -1,0 +1,26 @@
+.steps {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 4fr;
+}
+
+.steps__line {
+    padding: 9px;
+    background-color: var(--color-label-bg);
+    color: var(--color-text);
+    text-align: center;
+}
+
+.steps__line_active {
+    background-color: var(--color-accent);
+    color: var(--color-text-reverse);
+}
+
+.steps__label {
+    white-space: nowrap;
+    color: var(--color-text-label);
+    text-align: center;
+    line-height: 17px;
+    font-weight: 500;
+    margin: 14px 0 0 0;
+}

@@ -1,0 +1,40 @@
+.navigation-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-main);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.navigation-button_type_login {
+    color: var(--color-text-reverse);
+    background-color: var(--color-accent);
+    text-align: center;
+    border-radius: 3px;
+    padding: 0;
+    width: 76px;
+    height: 32px;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.navigation-button_type_profile {
+    background-color: var(--color-main-bg);
+    color: var(--color-text);
+    border-radius: 40px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
+    padding: 3px 3px 3px 11px;
+    font-size: 13px;
+    line-height: 12px;
+}
+
+.navigation-button__icon {
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    background-color: var(--color-icon-bg);
+    margin-left: 7px;
+}

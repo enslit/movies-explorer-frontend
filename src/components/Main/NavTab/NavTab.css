@@ -1,0 +1,12 @@
+.nav-tab {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-label-bg);
+    color: var(--color-text);
+    text-decoration: none;
+    font-family: var(--font-main);
+    width: 96px;
+    height: 36px;
+    border-radius: 10px;
+}

@@ -1,0 +1,11 @@
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 30px;
+    margin: 0 auto;
+}
+
+.container_with-background {
+    border-radius: 10px;
+    background-color: var(--color-section-bg);
+}

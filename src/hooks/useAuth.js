@@ -22,14 +22,9 @@ const useProvideAuth = () => {
   const [isAuthReady, setIsAuthReady] = useState(false);
 
   const signIn = ({ username, password }) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setUser({ username });
-        setIsLoggedIn(true);
-        setIsAuthReady(true);
-        resolve();
-      }, 1000);
-    });
+    setIsAuthReady(true);
+    setUser({ username: 'enslit' });
+    setIsLoggedIn(true);
     // return bbbsApi
     //   .login({ username, password })
     //   .then((tokens) => {

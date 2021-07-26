@@ -1,0 +1,9 @@
+.external-link {
+    text-decoration: none;
+    color: var(--color-text);
+    transition: opacity var(--transition-duration) var(--transition-timing-funciton);
+}
+
+.external-link:hover {
+    opacity: .8;
+}
