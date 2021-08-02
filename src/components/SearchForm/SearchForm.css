@@ -3,7 +3,6 @@
     border-radius: 8px;
     padding: 10px;
     display: flex;
-    justify-content: space-between;
 }
 
 .search_focused {
@@ -11,6 +10,7 @@
 }
 
 .search__input {
+    width: 100%;
     flex-grow: 1;
     background-color: transparent;
     outline: none;
@@ -32,4 +32,19 @@
 .search__button {
     height: 52px;
     width: 100px;
+}
+
+@media screen and (max-width: 480px) {
+    .search {
+        padding: 6px;
+    }
+
+    .search__input {
+        padding-left: 6px;
+    }
+
+    .search__button {
+        height: 44px;
+        width: 80px;
+    }
 }

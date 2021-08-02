@@ -3,9 +3,8 @@ import './Container.css';
 import { bool, element, node, oneOfType } from 'prop-types';
 import classNames from 'classnames';
 
-const Container = ({ children, withBackground, stretchHeight }) => {
+const Container = ({ children, stretchHeight }) => {
   const classes = classNames('container', {
-    'container_with-background': withBackground,
     'container_stretch-height': stretchHeight,
   });
 
@@ -14,7 +13,6 @@ const Container = ({ children, withBackground, stretchHeight }) => {
 
 Container.propTypes = {
   children: oneOfType([node, element]),
-  withBackground: bool,
   stretchHeight: bool,
 };
 

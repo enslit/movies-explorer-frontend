@@ -10,7 +10,7 @@ const Section = ({
   anchor,
   children,
   className,
-  stretchContainer = false,
+  stretchContainer,
 }) => {
   const containerClasses = classNames(
     'section',
@@ -37,6 +37,11 @@ Section.propTypes = {
   anchor: string,
   className: string,
   stretchContainer: bool,
+  backgroundContainer: bool,
+};
+
+Section.defaultProps = {
+  stretchContainer: false,
 };
 
 export default Section;

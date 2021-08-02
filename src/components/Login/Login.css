@@ -1,9 +1,16 @@
 .form-container {
     box-sizing: content-box;
     padding: 0 15px;
-    width: 396px;
+    max-width: 396px;
+    width: 100%;
     margin: 0 auto;
     display: grid;
     align-content: center;
     grid-row: 1 / 4;
+}
+
+@media screen and (max-width: 430px) {
+    .form-container {
+        box-sizing: border-box;
+    }
 }

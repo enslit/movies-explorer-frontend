@@ -50,3 +50,13 @@
 .profile__input:invalid {
     color: var(--color-danger);
 }
+
+@media screen and (max-width: 480px) {
+    .profile {
+        padding-top: 70px;
+    }
+
+    .profile__great {
+        margin-bottom: 80px;
+    }
+}

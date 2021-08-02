@@ -2,7 +2,7 @@ import React from 'react';
 import './MoviesCard.css';
 import { bool, func, object } from 'prop-types';
 import { minutesToFormatTime } from '../../utils/utils';
-import IconButton from '../ButtonLike/IconButton';
+import IconButton from '../IconButton/IconButton';
 
 const MoviesCard = ({ movie, onLike, isSavedMovie, onDelete }) => {
   const onClickLike = (evt) => {

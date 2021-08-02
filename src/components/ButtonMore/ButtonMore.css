@@ -22,3 +22,9 @@
 .button-more:hover {
     border-color: var(--color-focus-outline);
 }
+
+@media screen and (max-width: 480px) {
+    .button-more {
+        max-width: 240px;
+    }
+}

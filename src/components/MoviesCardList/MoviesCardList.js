@@ -13,6 +13,7 @@ const MoviesCardList = ({
   handlerLike,
   handlerDelete,
   isSavedMoviesPage,
+  initialized,
 }) => {
   const handlerClickMore = () => {
     onClickLoadMore();
@@ -21,30 +22,30 @@ const MoviesCardList = ({
   return (
     <Section className="movies-list" stretchContainer={true}>
       <div className="movies-list__content">
-        {!isLoading ? (
-          movies.length === 0 ? (
-            <p className="movies-list__empty-list-message">Список пуст</p>
-          ) : (
-            <>
-              <ul className="movies-list__list">
-                {movies.map((movie) => (
-                  <li key={movie.id} className="movies-list__item">
-                    <MoviesCard
-                      movie={movie}
-                      onLike={handlerLike}
-                      onDelete={handlerDelete}
-                      isSavedMovie={isSavedMoviesPage}
-                    />
-                  </li>
-                ))}
-              </ul>
-              {onClickLoadMore && <ButtonMore onClick={handlerClickMore} />}
-            </>
-          )
-        ) : (
+        {isLoading && !initialized ? (
           <div className="movies-list__loader">
             <Loader />
           </div>
+        ) : movies.length === 0 ? (
+          <p className="movies-list__empty-list-message">Список пуст</p>
+        ) : (
+          <>
+            <ul className="movies-list__list">
+              {movies.map((movie) => (
+                <li key={movie.id} className="movies-list__item">
+                  <MoviesCard
+                    movie={movie}
+                    onLike={handlerLike}
+                    onDelete={handlerDelete}
+                    isSavedMovie={isSavedMoviesPage}
+                  />
+                </li>
+              ))}
+            </ul>
+            {onClickLoadMore && (
+              <ButtonMore onClick={handlerClickMore} isLoading={isLoading} />
+            )}
+          </>
         )}
       </div>
     </Section>
@@ -58,6 +59,7 @@ MoviesCardList.propTypes = {
   handlerLike: func,
   handlerDelete: func,
   isSavedMoviesPage: bool,
+  initialized: bool,
 };
 
 export default MoviesCardList;

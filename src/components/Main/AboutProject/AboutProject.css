@@ -9,3 +9,15 @@
 .about-project__steps {
     margin-top: 110px;
 }
+
+@media screen and (max-width: 768px) {
+    .about-project {
+        padding: 90px 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .about-project {
+        padding: 70px 0;
+    }
+}

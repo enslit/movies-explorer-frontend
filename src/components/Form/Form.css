@@ -4,6 +4,11 @@
     grid-gap: 40px;
 }
 
+.form__header {
+    display: flex;
+    flex-direction: column;
+}
+
 .form__title {
     font-weight: 500;
     font-size: 24px;
@@ -70,4 +75,11 @@
     line-height: 17px;
     text-decoration: none;
     color: var(--color-secondary);
+}
+
+@media screen and (max-width: 480px) {
+    .form__header {
+        align-items: center;
+        justify-content: center;
+    }
 }

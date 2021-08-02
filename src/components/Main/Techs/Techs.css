@@ -22,3 +22,32 @@
 .tech__labels {
     margin: 100px auto 0;
 }
+
+@media screen and (max-width: 768px) {
+    .tech {
+        padding: 90px 0;
+    }
+
+    .tech__labels {
+        margin-top: 83px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .tech {
+        padding: 70px 0;
+    }
+
+    .tech__title {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .tech__text {
+        line-height: 16px;
+    }
+
+    .tech__labels {
+        margin-top: 50px;
+    }
+}

@@ -17,6 +17,7 @@ const Navigation = ({ isOpened, onClose }) => {
             activeClassName="navigation__link_active"
             className="navigation__link"
             to="/"
+            exact
           >
             Главная
           </NavLink>
@@ -42,15 +43,6 @@ const Navigation = ({ isOpened, onClose }) => {
       </>
     ) : (
       <>
-        <li className="navigation__item navigation__item_home">
-          <NavLink
-            activeClassName="navigation__link_active"
-            className="navigation__link"
-            to="/"
-          >
-            Главная
-          </NavLink>
-        </li>
         <li className="navigation__item">
           <NavLink
             activeClassName="navigation__link_active"
@@ -65,17 +57,26 @@ const Navigation = ({ isOpened, onClose }) => {
   }, [isLoggedIn]);
 
   const classes = classNames('navigation', {
+    navigation_authorized: isLoggedIn,
     navigation_visible: isOpened,
+  });
+
+  const classesList = classNames('navigation__list', {
+    navigation__list_authorized: isLoggedIn,
+  });
+
+  const classesButtonClose = classNames('navigation__close', {
+    navigation__close_authorized: isLoggedIn,
   });
 
   return (
     <nav className={classes}>
       <button
-        className="navigation__close"
+        className={classesButtonClose}
         onClick={onClose}
         aria-label="Кнопка закрытия меню"
       />
-      <ul className="navigation__list">{navigation}</ul>
+      <ul className={classesList}>{navigation}</ul>
       <NavButton isLoggedIn={isLoggedIn} />
     </nav>
   );

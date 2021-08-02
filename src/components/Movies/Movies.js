@@ -7,11 +7,17 @@ import { movies as requestMovies } from '../../mockData/movies';
 import MoviesContainer from '../MoviesContainer/MoviesContainer';
 
 const Movies = () => {
+  const [initialized, setInitialized] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [movies, setMovies] = useState([]);
 
   const handlerClickMore = () => {
     console.log('click button more');
+    setIsFetching(true);
+
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 500);
   };
 
   const handlerLike = (id) => {
@@ -33,6 +39,7 @@ const Movies = () => {
     setTimeout(() => {
       setMovies(requestMovies);
       setIsFetching(false);
+      setInitialized(true);
     }, 500);
   }, []);
 
@@ -48,6 +55,7 @@ const Movies = () => {
               onClickLoadMore={handlerClickMore}
               isSavedMoviesPage={false}
               handlerLike={handlerLike}
+              initialized={initialized}
             />
           )}
         </MoviesContainer>

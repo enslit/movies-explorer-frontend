@@ -3,8 +3,10 @@ import './Header.css';
 import Navigation from '../Navigation/Navigation';
 import Container from '../Container/Container';
 import Logo from '../Logo/Logo';
+import { useAuth } from '../../hooks/useAuth';
 
 const Header = () => {
+  const { isLoggedIn } = useAuth();
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
   const handlerCloseMenu = () => {
@@ -21,9 +23,11 @@ const Header = () => {
         <div className="header__container">
           <Logo />
           <Navigation isOpened={isMenuOpened} onClose={handlerCloseMenu} />
-          <button className="header__menu-button" onClick={handlerOpenMenu}>
-            <span className="menu-button__line" />
-          </button>
+          {isLoggedIn && (
+            <button className="header__menu-button" onClick={handlerOpenMenu}>
+              <span className="menu-button__line" />
+            </button>
+          )}
         </div>
       </Container>
     </header>

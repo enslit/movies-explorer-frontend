@@ -25,3 +25,19 @@
     justify-content: center;
 }
 
+@media screen and (max-width: 768px) {
+    .label-list__list {
+        grid-template-columns: repeat(4, min-content);
+    }
+
+    .label-list__item {
+        width: 84px;
+        height: 57px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .label-list__list {
+        grid-template-columns: repeat(2, min-content);
+    }
+}

@@ -9,9 +9,25 @@
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
+    font-size: 14px;
+    line-height: 1.43;
 }
 
 .app_loading {
     grid-template-rows: 1vh;
     place-content: center;
+}
+
+@media screen and (max-width: 768px) {
+    .app {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .app {
+        font-size: 11px;
+        line-height: 1.45;
+    }
 }
