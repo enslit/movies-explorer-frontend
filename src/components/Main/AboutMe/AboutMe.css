@@ -63,3 +63,9 @@
     text-decoration: none;
     color: var(--color-text);
 }
+
+@media screen and (max-width: 940px) {
+    .about-me__description {
+        max-width: 365px;
+    }
+}

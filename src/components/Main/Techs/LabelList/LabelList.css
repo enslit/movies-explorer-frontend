@@ -7,12 +7,15 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
-    display: flex;
+    display: grid;
     align-items: center;
+    grid-template-columns: repeat(auto-fit, 90px);
+    width: 100%;
+    grid-gap: 10px;
+    justify-content: center;
 }
 
 .label-list__item {
-    margin-right: 10px;
     border-radius: 10px;
     height: 60px;
     width: 90px;
@@ -20,9 +23,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.label-list__item:last-child {
-    margin-right: 0;
 }
 

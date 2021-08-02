@@ -1,9 +1,8 @@
 import React from 'react';
 import LoaderPart from './LoaderPart';
 import { number, string } from 'prop-types';
-import classNames from 'classnames';
 
-function Loader({ count, size, speed, color, className }) {
+function Loader({ count, size, speed, color }) {
   const buildParts = () => {
     const rotateStep = 360 / count;
     const delayStep = speed / count;
@@ -26,19 +25,15 @@ function Loader({ count, size, speed, color, className }) {
     return parts;
   };
 
-  const classes = classNames('loader', className);
-
   return (
-    <div className="loader-container">
-      <svg
-        className={classes}
-        width={`${size}px`}
-        height={`${size}px`}
-        preserveAspectRatio="xMidYMid"
-      >
-        {buildParts()}
-      </svg>
-    </div>
+    <svg
+      className="loader"
+      width={`${size}px`}
+      height={`${size}px`}
+      preserveAspectRatio="xMidYMid"
+    >
+      {buildParts()}
+    </svg>
   );
 }
 
@@ -54,7 +49,6 @@ Loader.propTypes = {
   speed: number,
   color: string,
   size: number,
-  className: string,
 };
 
 export default Loader;

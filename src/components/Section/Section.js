@@ -1,19 +1,28 @@
 import React from 'react';
 import './Section.css';
-import { any, oneOf, string } from 'prop-types';
+import { any, bool, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 import Container from '../Container/Container';
 
-const Section = ({ style, title, anchor, children, className }) => {
+const Section = ({
+  style,
+  title,
+  anchor,
+  children,
+  className,
+  stretchContainer = false,
+}) => {
   const containerClasses = classNames(
     'section',
-    `section_style_${style}`,
+    {
+      [`section_style_${style}`]: style,
+    },
     className
   );
 
   return (
     <section className={containerClasses} id={anchor}>
-      <Container>
+      <Container stretchHeight={stretchContainer}>
         {title && <h2 className="section__title">{title}</h2>}
         {children}
       </Container>
@@ -22,15 +31,12 @@ const Section = ({ style, title, anchor, children, className }) => {
 };
 
 Section.propTypes = {
-  style: oneOf(['default', 'secondary']),
+  style: oneOf(['secondary']),
   children: any,
   title: string,
   anchor: string,
   className: string,
-};
-
-Section.defaultProps = {
-  style: 'default',
+  stretchContainer: bool,
 };
 
 export default Section;

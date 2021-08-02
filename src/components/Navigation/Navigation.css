@@ -20,12 +20,113 @@
     margin-right: 0;
 }
 
+.navigation__item_home {
+    display: none;
+}
+
 .navigation__link {
     color: var(--color-text);
     text-decoration: none;
     white-space: nowrap;
+    transition: opacity var(--transition-duration) var(--transition-timing-funciton);
+}
+
+.navigation__link:hover {
+    opacity: .8;
 }
 
 .navigation__link_active {
     font-weight: 500;
+}
+
+.navigation__close {
+    display: none;
+    background-color: transparent;
+    border: none;
+    font-family: var(--font-main);
+    color: var(--color-text);
+}
+
+@media screen and (max-width: 768px) {
+    .navigation {
+        margin: 0;
+        position: fixed;
+        flex-direction: column;
+        height: 100%;
+        right: -150%;
+        top: 0;
+        width: 100%;
+        max-width: 520px;
+        background-color: var(--color-main-bg);
+        padding: 159px 15px 90px;
+        transition: all var(--transition-duration) var(--transition-timing-funciton);
+    }
+
+    .navigation_visible {
+        z-index: 10;
+        right: 0;
+    }
+
+    .navigation_visible:before {
+        z-index: -1;
+        content: '';
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, .3);
+    }
+
+    .navigation__list {
+        margin: 0;
+        flex-direction: column;
+    }
+
+    .navigation__item {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .navigation__item:last-child {
+        margin-bottom: 0;
+    }
+
+    .navigation__item_home {
+        display: inline-block;
+    }
+
+    .navigation__link_active {
+        padding-bottom: 7px;
+        border-bottom: 1px solid var(--color-text);
+    }
+
+    .navigation__close {
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        height: 20px;
+        width: 20px;
+        overflow: hidden;
+    }
+
+    .navigation__close:after, .navigation__close:before {
+        content: '';
+        display: block;
+        height: 3px;
+        width: 22px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: var(--color-text);
+    }
+
+    .navigation__close:after {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .navigation__close:before {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
 }

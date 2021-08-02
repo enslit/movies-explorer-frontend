@@ -9,17 +9,26 @@ const Portfolio = () => {
       <h2 className="portfolio__title">Порфолио</h2>
       <ul className="portfolio__projects">
         <li className="portfolio__project">
-          <ExternalLink to="#" className="portfolio__project-link">
+          <ExternalLink
+            to="https://enslit.github.io/how-to-learn/"
+            className="portfolio__project-link"
+          >
             Статичный сайт
           </ExternalLink>
         </li>
         <li className="portfolio__project">
-          <ExternalLink to="#" className="portfolio__project-link">
+          <ExternalLink
+            to="https://enslit.github.io/russian-travel"
+            className="portfolio__project-link"
+          >
             Адаптивный сайт
           </ExternalLink>
         </li>
         <li className="portfolio__project">
-          <ExternalLink to="#" className="portfolio__project-link">
+          <ExternalLink
+            to="https://enslit.nomoredomains.monster"
+            className="portfolio__project-link"
+          >
             Одностраничное приложение
           </ExternalLink>
         </li>

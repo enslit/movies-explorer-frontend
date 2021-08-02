@@ -1,0 +1,9 @@
+.form-container {
+    box-sizing: content-box;
+    padding: 0 15px;
+    width: 396px;
+    margin: 0 auto;
+    display: grid;
+    align-content: center;
+    grid-row: 1 / 4;
+}

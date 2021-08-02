@@ -9,3 +9,7 @@
     border-radius: 10px;
     background-color: var(--color-section-bg);
 }
+
+.container_stretch-height {
+    height: 100%;
+}

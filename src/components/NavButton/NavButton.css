@@ -17,6 +17,11 @@
     height: 32px;
     font-size: 12px;
     line-height: 16px;
+    transition: opacity var(--transition-duration) var(--transition-timing-funciton);
+}
+
+.navigation-button_type_login:hover {
+    opacity: .8;
 }
 
 .navigation-button_type_profile {

@@ -1,15 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './SearchForm.css';
 import { func, string } from 'prop-types';
 import classNames from 'classnames';
+import Button from '../Button/Button';
 
-const SearchForm = ({ onSearch, onChangeQuery, queryValue, className }) => {
+const SearchForm = ({ onSearch, setQueryValue, queryValue, className }) => {
+  const [inputFocused, setInputFocused] = useState(false);
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
     onSearch();
   };
 
-  const formClasses = classNames('search', className);
+  const handleChangeInput = (evt) => {
+    setQueryValue(evt.target.value);
+  };
+
+  const handleFocusInput = () => {
+    setInputFocused(true);
+  };
+
+  const handleBlurInput = (e) => {
+    setInputFocused(false);
+  };
+
+  const formClasses = classNames(
+    'search',
+    { search_focused: inputFocused },
+    className
+  );
 
   return (
     <form
@@ -23,16 +42,25 @@ const SearchForm = ({ onSearch, onChangeQuery, queryValue, className }) => {
         placeholder="Поиск"
         className="search__input"
         value={queryValue}
-        onChange={onChangeQuery}
+        onChange={handleChangeInput}
+        onFocus={handleFocusInput}
+        onBlur={handleBlurInput}
       />
-      <button className="search__button">Поиск</button>
+      <Button
+        type="submit"
+        name="submit"
+        className="search__button"
+        style="secondary"
+      >
+        Поиск
+      </Button>
     </form>
   );
 };
 
 SearchForm.propTypes = {
   onSearch: func,
-  onChangeQuery: func,
+  setQueryValue: func,
   queryValue: string,
   className: string,
 };

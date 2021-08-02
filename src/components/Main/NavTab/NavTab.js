@@ -3,10 +3,18 @@ import './NavTab.css';
 import { string } from 'prop-types';
 
 const NavTab = ({ label, anchor }) => {
+  const handlerClick = (e) => {
+    e.preventDefault();
+    document.querySelector(`#${anchor}`).scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
   return (
-    <a href={`/#${anchor}`} className="nav-tab">
+    <span className="nav-tab" onClick={handlerClick}>
       {label}
-    </a>
+    </span>
   );
 };
 

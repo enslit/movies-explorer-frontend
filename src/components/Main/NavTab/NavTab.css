@@ -3,10 +3,13 @@
     justify-content: center;
     align-items: center;
     background-color: var(--color-label-bg);
-    color: var(--color-text);
-    text-decoration: none;
-    font-family: var(--font-main);
     width: 96px;
     height: 36px;
     border-radius: 10px;
+    cursor: pointer;
+    transition: all var(--transition-duration) var(--transition-timing-funciton);
+}
+
+.nav-tab:hover {
+    box-shadow: 0 0 5px var(--color-text);
 }

@@ -12,7 +12,7 @@ LoaderPart.propTypes = {
 
 function LoaderPart({ step, speed, delay, color, size, count }) {
   const halfSize = size / 2;
-  const partSize = 360 / count;
+  const partSize = ((2 * Math.PI * halfSize) / count) * 0.8;
 
   return (
     <g transform={`rotate(${step} ${halfSize} ${halfSize})`}>

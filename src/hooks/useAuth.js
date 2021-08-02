@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { any } from 'prop-types';
+import { appApi } from '../utils/Api/api';
 
 ProvideAuth.propTypes = {
   children: any,
@@ -17,49 +18,68 @@ export const useAuth = () => {
 };
 
 const useProvideAuth = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthReady, setIsAuthReady] = useState(false);
 
-  const signIn = ({ username, password }) => {
-    setIsAuthReady(true);
-    setUser({ username: 'enslit' });
-    setIsLoggedIn(true);
-    // return bbbsApi
-    //   .login({ username, password })
-    //   .then((tokens) => {
-    //     localStorage.setItem(JWT_LS_KEY, JSON.stringify(tokens));
-    //     return bbbsApi.getUserProfile();
-    //   })
-    //   .then((userData) => {
-    //     setUser(userData);
-    //     setLoggedIn(true);
-    //   });
+  const signIn = ({ email, password }) => {
+    return appApi
+      .auth(email, password)
+      .then((response) => {
+        console.log(response);
+
+        if (!response.message || response.message !== 'Авторизован') {
+          throw new Error(response?.message || 'Ошибка');
+        }
+
+        return appApi.getUserProfile();
+      })
+      .then((userData) => {
+        setUser(userData);
+        setIsLoggedIn(true);
+      });
   };
 
-  const signOut = (cb) => {
-    // localStorage.removeItem(JWT_LS_KEY);
-    // setUser(null);
-    // setLoggedIn(false);
-    // cb();
+  const signOut = () => {
+    appApi
+      .logout()
+      .then(() => {
+        setIsLoggedIn(false);
+        setUser(null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const updateUserProfile = (formData) => {
+    return appApi
+      .updateUserInfo(formData)
+      .then(() => {
+        setUser((prev) => ({
+          ...prev,
+          ...formData,
+        }));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
-    // const jwt = localStorage.getItem(JWT_LS_KEY);
-    //
-    // if (jwt) {
-    //   bbbsApi
-    //     .getUserProfile()
-    //     .then((userData) => {
-    //       setUser(userData);
-    //       setLoggedIn(true);
-    //     })
-    //     .catch((error) => console.log(error))
-    //     .finally(() => setAuthReady(true));
-    // } else {
-    //   setAuthReady(true);
-    // }
+    appApi
+      .getUserProfile()
+      .then((response) => {
+        if (response.message) {
+          throw new Error(response.message);
+        }
+
+        setUser(response);
+        setIsLoggedIn(true);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setIsAuthReady(true));
   }, []);
 
-  return { isAuthReady, isLoggedIn, user, signIn, signOut };
+  return { isAuthReady, isLoggedIn, user, signIn, signOut, updateUserProfile };
 };
