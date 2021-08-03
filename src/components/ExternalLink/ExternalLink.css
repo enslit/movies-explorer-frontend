@@ -1,0 +1,11 @@
+.external-link {
+    font-size: 14px;
+    line-height: 17px;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: opacity var(--transition-duration) var(--transition-timing-funciton);
+}
+
+.external-link:hover {
+    opacity: .8;
+}

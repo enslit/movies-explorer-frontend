@@ -1,0 +1,21 @@
+.section_style_secondary {
+    background-color: var(--color-section-bg);
+}
+
+.section__title {
+    font-family: var(--font-main);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 27px;
+    letter-spacing: -0.04em;
+    border-bottom: 1px solid var(--color-section-border );
+    padding-bottom: 23px;
+    margin: 0;
+}
+
+@media screen and (max-width: 480px) {
+    .section__title {
+        font-size: 18px;
+        line-height: 22px;
+    }
+}

@@ -1,0 +1,16 @@
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 30px;
+    margin: 0 auto;
+}
+
+.container_stretch-height {
+    height: 100%;
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 0 14px;
+    }
+}

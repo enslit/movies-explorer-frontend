@@ -1,0 +1,31 @@
+.about-description {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 40px;
+}
+
+.about-description__header {
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.04em;
+    margin: 0 0 26px 0;
+}
+
+@media screen and (max-width: 550px) {
+    .about-description {
+        grid-template-columns: 1fr;
+    }
+
+    .about-description__header {
+        font-size: 18px;
+        line-height: 22px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .about-description__header {
+        font-size: 18px;
+        line-height: 22px;
+    }
+}

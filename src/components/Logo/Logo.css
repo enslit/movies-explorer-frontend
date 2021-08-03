@@ -1,0 +1,21 @@
+.logo {
+    position: relative;
+    display: inline-block;
+    height: 38px;
+    width: 38px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+}
+
+.logo:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 20px;
+    width: 20px;
+    background-color: var(--color-main-bg);
+    border-radius: 50%;
+}

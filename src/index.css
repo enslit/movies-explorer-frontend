@@ -1,13 +1,45 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import './vendor/normalize.css';
+@import './vendor/fonts/inter.css';
+
+:root {
+    --color-text: #fff;
+    --color-text-label: #8b8b8b;
+    --color-text-reverse: #000;
+    --color-main-bg: #202020;
+    --color-section-bg: #272727;
+    --color-input-bg: #2f2f2f;
+    --color-label-bg: #303030;
+    --color-card-bg: #222;
+    --color-accent: #3ddc84;
+    --color-secondary: #4285f4;
+    --color-danger: #ee3465;
+    --color-section-border: #dadada;
+    --color-icon-bg: #313131;
+    --color-border-line: #424242;
+    --color-border: rgba(170, 170, 170, .8);
+    --color-focus-outline: white;
+
+    --shadow-card: 0 4px 30px rgba(0, 0, 0, 0.08);
+    --shadow-card-hover: 0 4px 30px rgba(59, 59, 59, 0.8);
+
+    --transition-duration: 200ms;
+    --transition-timing-funciton: ease-in-out;
+
+    --font-main: 'Inter', 'Arial', sans-serif;
+    --font-size: 14px;
+
+    --color-theme-dark: #202020;
+    --color-theme-light: #aaa;
+    --color-text-theme-light: #333;
+    --color-text-theme-dark: #fff;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    font-size: var(--font-size);
+    line-height: 1.5;
 }
