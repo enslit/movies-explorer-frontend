@@ -9,7 +9,7 @@ const MoviesContainer = ({ list, children }) => {
   const filterMovies = useCallback(
     (query) => {
       setIsFiltering(true);
-      setFilteredMovies(list.filter((movie) => movie.name.includes(query)));
+      setFilteredMovies(list.filter((movie) => movie.nameRU.includes(query)));
       setIsFiltering(false);
     },
     [list]
@@ -31,10 +31,12 @@ MoviesContainer.propTypes = {
   list: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
-      img: PropTypes.string,
+      image: PropTypes.string,
       duration: PropTypes.number,
       isLiked: PropTypes.bool,
-      name: PropTypes.string,
+      nameRU: PropTypes.string,
+      description: PropTypes.string,
+      trailerLink: PropTypes.string,
     })
   ).isRequired,
   children: PropTypes.func.isRequired,

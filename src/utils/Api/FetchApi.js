@@ -2,6 +2,7 @@ export class FetchApi {
   constructor(options) {
     this._baseUrl = options.baseUrl;
     this._headers = options.headers;
+    this._credentials = options.credentials || 'same-origin';
   }
 
   _fetch(url, method = 'GET', body = null, additionalHeaders = {}) {
@@ -9,7 +10,7 @@ export class FetchApi {
     const options = {
       method,
       headers: Object.assign(this._headers, additionalHeaders),
-      credentials: 'include',
+      credentials: this._credentials,
     };
 
     if (body) {

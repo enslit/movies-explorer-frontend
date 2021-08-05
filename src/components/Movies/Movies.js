@@ -3,13 +3,14 @@ import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import { movies as requestMovies } from '../../mockData/movies';
 import MoviesContainer from '../MoviesContainer/MoviesContainer';
+import { moviesApi } from '../../utils/Api/api';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const Movies = () => {
   const [initialized, setInitialized] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useLocalStorage('movies', []);
 
   const handlerClickMore = () => {
     console.log('click button more');
@@ -35,12 +36,18 @@ const Movies = () => {
   };
 
   useEffect(() => {
-    // TMP LOGIC
-    setTimeout(() => {
-      setMovies(requestMovies);
-      setIsFetching(false);
-      setInitialized(true);
-    }, 500);
+    moviesApi
+      .getMovies()
+      .then((movies) => {
+        setMovies(movies);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setInitialized(true);
+        setIsFetching(false);
+      });
   }, []);
 
   return (
