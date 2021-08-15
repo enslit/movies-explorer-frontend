@@ -77,6 +77,10 @@
     color: var(--color-secondary);
 }
 
+.form__request-error {
+    color: red;
+}
+
 @media screen and (max-width: 480px) {
     .form__header {
         align-items: center;

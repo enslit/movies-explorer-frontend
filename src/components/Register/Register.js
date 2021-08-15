@@ -6,17 +6,13 @@ import FormInput from '../Form/FormInput';
 import SubmitButton from '../Form/SubmitButton';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { appApi } from '../../utils/Api/api';
 
 const Register = ({ handleSignUp }) => {
-  const handleSubmit = ({ name, email, password }, setSubmitting) => {
-    return appApi
-      .register(name, email, password)
-      .then((response) => {
-        console.log(response);
-      })
+  const handleSubmit = ({ name, email, password }, setSubmitting, setError) => {
+    handleSignUp({ name, email, password })
       .catch((error) => {
         console.error(error);
+        setError(error.message);
       })
       .finally(() => setSubmitting(false));
   };
@@ -32,7 +28,7 @@ const Register = ({ handleSignUp }) => {
         password: '',
       }}
     >
-      {({ form, state, handleInput }) => (
+      {({ form, state, handleInput, error }) => (
         <>
           <div className="form__header">
             <Logo />
@@ -72,6 +68,7 @@ const Register = ({ handleSignUp }) => {
             />
           </div>
           <div className="form__actions">
+            {error && <span className="form__request-error">{error}</span>}
             <SubmitButton
               label="Зарегистрироваться"
               disabled={!state.valid}

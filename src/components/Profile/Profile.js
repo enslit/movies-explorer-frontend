@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './Profile.css';
 import Section from '../Section/Section';
-import { useAuth } from '../../hooks/useAuth';
 import Header from '../Header/Header';
 import ProfileFooter from './ProfileFooter/ProfileFooter';
+import PropTypes from 'prop-types';
+import CurrentUserContext from '../../context/CurrentUserContext';
 
-const Profile = () => {
-  const { user, signOut, updateUserProfile } = useAuth();
+const Profile = ({ handleSignOut, handleUpdateProfile }) => {
+  const { currentUser } = useContext(CurrentUserContext);
   const [isEditMode, setEditMode] = useState(false);
   const [profileForm, setProfileForm] = useState({
-    name: user.name,
-    email: user.email,
+    name: currentUser.name,
+    email: currentUser.email,
   });
 
   const changeInput = (e) => {
@@ -30,7 +31,7 @@ const Profile = () => {
 
   const handleSave = () => {
     setEditMode(false);
-    updateUserProfile(profileForm);
+    handleUpdateProfile(profileForm);
   };
 
   return (
@@ -39,7 +40,7 @@ const Profile = () => {
       <main>
         <Section className="profile">
           <div className="profile__info">
-            <h1 className="profile__great">Привет, {user.name}!</h1>
+            <h1 className="profile__great">Привет, {currentUser.name}!</h1>
             <ul className="profile__data-list">
               <li className="profile__field">
                 <span className="profile__label">Имя</span>
@@ -53,7 +54,7 @@ const Profile = () => {
                     name="name"
                   />
                 ) : (
-                  <span className="profile__value">{user.name}</span>
+                  <span className="profile__value">{currentUser.name}</span>
                 )}
               </li>
               <li className="profile__field">
@@ -68,7 +69,7 @@ const Profile = () => {
                     name="email"
                   />
                 ) : (
-                  <span className="profile__value">{user.email}</span>
+                  <span className="profile__value">{currentUser.email}</span>
                 )}
               </li>
             </ul>
@@ -76,7 +77,7 @@ const Profile = () => {
         </Section>
       </main>
       <ProfileFooter
-        signOut={signOut}
+        signOut={handleSignOut}
         onClickEdit={handleChangeEditMode}
         editMode={isEditMode}
         onClickSave={handleSave}
@@ -84,6 +85,11 @@ const Profile = () => {
       />
     </>
   );
+};
+
+Profile.propTypes = {
+  handleUpdateProfile: PropTypes.func,
+  handleSignOut: PropTypes.func,
 };
 
 export default Profile;

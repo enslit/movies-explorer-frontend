@@ -1,70 +1,258 @@
-import React, { lazy, Suspense } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
-import { Switch, Route } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import Loader from '../Loader/Loader';
 import classNames from 'classnames';
 import ProtectedRoute from '../../hocs/ProtectedRoute';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import { appApi, moviesApi } from '../../utils/Api/api';
+import Movies from '../Movies/Movies';
+import Main from '../Main/Main';
+import SavedMovies from '../SavedMovies/SavedMovies';
+import Profile from '../Profile/Profile';
+import Login from '../Login/Login';
+import Register from '../Register/Register';
+import NotFound from '../NotFound/NotFound';
+import {
+  MOVIES_LOCAL_STORAGE_KEY,
+  SAVED_MOVIES_LOCAL_STORAGE_KEY,
+} from '../../utils/constants';
+import CurrentUserContext from '../../context/CurrentUserContext';
 
 const App = () => {
-  const { isAuthReady } = useAuth();
+  const history = useHistory();
+  const [currentUser, setCurrentUser] = useState(
+    useContext(CurrentUserContext)
+  );
+  const [authorized, setAuthorized] = useState(false);
+  const [appReady, setAppReady] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
+  const [movies, setMovies] = useLocalStorage(MOVIES_LOCAL_STORAGE_KEY, []);
+  const [savedMovies, setSavedMovies] = useLocalStorage(
+    SAVED_MOVIES_LOCAL_STORAGE_KEY,
+    []
+  );
+  const [isFetching, setIsFetching] = useState(true);
 
-  const components = {
-    Main: lazy(() => import('../Main/Main')),
-    Movies: lazy(() => import('../Movies/Movies')),
-    SavedMovies: lazy(() => import('../SavedMovies/SavedMovies')),
-    Profile: lazy(() => import('../Profile/Profile')),
-    Login: lazy(() => import('../Login/Login')),
-    Register: lazy(() => import('../Register/Register')),
-    NotFound: lazy(() => import('../NotFound/NotFound')),
-  };
-
-  const FallbackLoadingComponent = () => {
-    const styles = {
-      height: '100vh',
-      weight: '100%',
-      display: 'grid',
-      placeContent: 'center',
+  const onSave = (movie) => {
+    const prepare = {
+      country: movie.country,
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      description: movie.description,
+      image: `https://api.nomoreparties.co${movie.image.url}`,
+      thumbnail: `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}`,
+      trailer: movie.trailerLink,
+      movieId: movie.id,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
     };
 
-    return (
-      <div style={styles}>
-        <Loader />
-      </div>
-    );
+    appApi
+      .saveMovie(prepare)
+      .then((response) => {
+        if (response?.bodyError) {
+          throw new Error(
+            response.bodyError.map((error) => error.message).toString()
+          );
+        }
+
+        setSavedMovies((prevState) => [...prevState, response]);
+      })
+      .catch((error) => console.error('error', error.message));
   };
 
-  const appClasses = classNames('app', { app_loading: !isAuthReady });
+  const onRemove = (id) => {
+    appApi
+      .removeMovie(id)
+      .then(() => {
+        setSavedMovies((prevState) =>
+          prevState.filter((movie) => movie._id !== id)
+        );
+      })
+      .catch((error) => console.error(error.message));
+  };
+
+  const onSignIn = ({ email, password }) => {
+    return appApi
+      .auth(email, password)
+      .then((response) => {
+        if (!response.message || response.message !== 'Авторизован') {
+          throw new Error(response?.message || 'Ошибка');
+        }
+
+        return appApi.getUserProfile();
+      })
+      .then((userData) => {
+        setCurrentUser(userData);
+        setAuthorized(true);
+      });
+  };
+
+  const onSignUp = ({ name, email, password }) => {
+    return appApi.register(name, email, password).then((response) => {
+      if (response?.message) {
+        throw new Error(response.message);
+      }
+      setCurrentUser(response);
+      setAuthorized(true);
+      history.push('/movies');
+    });
+  };
+
+  const onSignOut = () => {
+    appApi
+      .logout()
+      .then(() => {
+        setMovies([]);
+        setSavedMovies([]);
+        setAuthorized(false);
+        setCurrentUser(null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onUpdateUserProfile = (formData) => {
+    return appApi
+      .updateUserInfo(formData)
+      .then(() => {
+        setCurrentUser((prev) => ({
+          ...prev,
+          ...formData,
+        }));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    const requests = [];
+
+    if (authorized) {
+      if (movies.length === 0) {
+        const request = moviesApi
+          .getMovies()
+          .then((movies) => setMovies(movies));
+
+        requests.push(request);
+      }
+
+      if (savedMovies.length === 0) {
+        const request = appApi
+          .getMovies()
+          .then((result) => setSavedMovies(result.movies));
+
+        requests.push(request);
+      }
+    }
+
+    if (requests.length > 0) {
+      Promise.all(requests)
+        .catch((error) => console.error(error.message))
+        .finally(() => {
+          setAppReady(true);
+          setIsFetching(false);
+        });
+    } else {
+      setAppReady(true);
+      setIsFetching(false);
+    }
+  }, [authorized]);
+
+  useEffect(() => {
+    setMovies((prev) => {
+      return prev.map((movie) => {
+        const savedMovie = savedMovies.find(
+          ({ movieId }) => +movieId === movie.id
+        );
+
+        return {
+          ...movie,
+          isSaved: !!savedMovie,
+          ...(savedMovie ? { _id: savedMovie._id } : {}),
+        };
+      });
+    });
+  }, [savedMovies, setMovies]);
+
+  useEffect(() => {
+    appApi
+      .getUserProfile()
+      .then((response) => {
+        if (response.message) {
+          throw new Error(response.message);
+        }
+
+        setCurrentUser(response);
+        setAuthorized(true);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setAuthReady(true));
+  }, []);
+
+  const appClasses = classNames('app', { app_loading: !appReady });
 
   return (
-    <div className={appClasses}>
-      {isAuthReady ? (
-        <Suspense fallback={<FallbackLoadingComponent />}>
+    <CurrentUserContext.Provider
+      value={{
+        currentUser,
+        setCurrentUser,
+        authorized,
+      }}
+    >
+      <div className={appClasses}>
+        {appReady && authReady ? (
           <Switch>
-            <Route exact path="/" component={components.Main} />
-            <ProtectedRoute path="/movies" component={components.Movies} />
+            <Route exact path="/">
+              <Main />
+            </Route>
             <ProtectedRoute
-              path="/saved-movies"
-              component={components.SavedMovies}
-            />
-            <ProtectedRoute path="/profile" component={components.Profile} />
-            <ProtectedRoute
-              path="/signin"
-              component={components.Login}
-              denyAuthUser={true}
-            />
-            <ProtectedRoute
-              path="/signup"
-              component={components.Register}
-              denyAuthUser={true}
-            />
-            <Route path="*" component={components.NotFound} />
+              path="/movies"
+              list={movies}
+              onSave={onSave}
+              isFetching={isFetching}
+              initialized={appReady}
+              onRemove={onRemove}
+            >
+              <Movies
+                list={movies}
+                onSave={onSave}
+                onRemove={onRemove}
+                isFetching={isFetching}
+                initialized={appReady}
+              />
+            </ProtectedRoute>
+            <ProtectedRoute path="/saved-movies">
+              <SavedMovies
+                list={savedMovies}
+                isFetching={isFetching}
+                initialized={appReady}
+                onRemove={onRemove}
+              />
+            </ProtectedRoute>
+            <ProtectedRoute path="/profile">
+              <Profile
+                handleSignOut={onSignOut}
+                handleUpdateProfile={onUpdateUserProfile}
+              />
+            </ProtectedRoute>
+            <ProtectedRoute path="/signin" denyAuthUser={true}>
+              <Login handleSignIn={onSignIn} />
+            </ProtectedRoute>
+            <ProtectedRoute path="/signup" denyAuthUser={true}>
+              <Register handleSignUp={onSignUp} />
+            </ProtectedRoute>
+            <Route path="*" component={NotFound} />
           </Switch>
-        </Suspense>
-      ) : (
-        <Loader />
-      )}
-    </div>
+        ) : (
+          <Loader />
+        )}
+      </div>
+    </CurrentUserContext.Provider>
   );
 };
 

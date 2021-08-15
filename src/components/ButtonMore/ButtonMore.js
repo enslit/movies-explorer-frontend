@@ -22,7 +22,7 @@ const ButtonMore = ({ onClick, className, isLoading }) => {
 ButtonMore.propTypes = {
   onClick: PropTypes.func.isRequired,
   className: PropTypes.string,
-  isLoading: PropTypes.func,
+  isLoading: PropTypes.bool,
 };
 
 export default ButtonMore;

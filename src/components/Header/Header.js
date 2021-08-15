@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './Header.css';
 import Navigation from '../Navigation/Navigation';
 import Container from '../Container/Container';
 import Logo from '../Logo/Logo';
-import { useAuth } from '../../hooks/useAuth';
+import CurrentUserContext from '../../context/CurrentUserContext';
 
 const Header = () => {
-  const { isLoggedIn } = useAuth();
+  const { authorized } = useContext(CurrentUserContext);
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
   const handlerCloseMenu = () => {
@@ -23,7 +23,7 @@ const Header = () => {
         <div className="header__container">
           <Logo />
           <Navigation isOpened={isMenuOpened} onClose={handlerCloseMenu} />
-          {isLoggedIn && (
+          {authorized && (
             <button className="header__menu-button" onClick={handlerOpenMenu}>
               <span className="menu-button__line" />
             </button>

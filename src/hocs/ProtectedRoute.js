@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import PropTypes from 'prop-types';
+import CurrentUserContext from '../context/CurrentUserContext';
 
-const ProtectedRoute = ({ denyAuthUser, ...props }) => {
-  const { isLoggedIn } = useAuth();
+const ProtectedRoute = ({ denyAuthUser, children, ...props }) => {
+  const { authorized } = useContext(CurrentUserContext);
 
-  console.log(props);
-
-  return (!denyAuthUser && isLoggedIn) || (denyAuthUser && !isLoggedIn) ? (
-    <Route exact {...props} />
+  return (!denyAuthUser && authorized) || (denyAuthUser && !authorized) ? (
+    <Route exact {...props}>
+      {children}
+    </Route>
   ) : (
     <Redirect to={denyAuthUser ? '/' : '/signin'} exact />
   );
 };
 
 ProtectedRoute.propTypes = {
+  children: PropTypes.element,
   denyAuthUser: PropTypes.bool,
 };
 

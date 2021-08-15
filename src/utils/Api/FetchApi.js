@@ -11,6 +11,7 @@ export class FetchApi {
       method,
       headers: Object.assign(this._headers, additionalHeaders),
       credentials: this._credentials,
+      SameSite: 'None',
     };
 
     if (body) {

@@ -5,20 +5,19 @@ import SearchForm from '../SearchForm/SearchForm';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import Section from '../Section/Section';
 
-const MoviesSearch = ({ onSearch }) => {
-  const [showOnlyShort, setShowOnlyShort] = useState(false);
-  const [query, setQuery] = useState('');
-
+const MoviesSearch = ({
+  onSearch,
+  onChangeShowShortFilms,
+  queryValue,
+  showOnlyShort,
+}) => {
+  const [value, setValue] = useState(queryValue || '');
   const handleChangeQuery = (value) => {
-    setQuery(value);
-  };
-
-  const handlerChangeShowOnlyShort = () => {
-    setShowOnlyShort((prev) => !prev);
+    setValue(value);
   };
 
   const handlerSearch = () => {
-    onSearch(query);
+    onSearch(value);
   };
 
   return (
@@ -26,12 +25,12 @@ const MoviesSearch = ({ onSearch }) => {
       <SearchForm
         onSearch={handlerSearch}
         setQueryValue={handleChangeQuery}
-        queryValue={query}
+        queryValue={value}
         className="movies-search__form"
       />
       <SwitchButton
         isActive={showOnlyShort}
-        onChange={handlerChangeShowOnlyShort}
+        onChange={onChangeShowShortFilms}
         label="Короткометражки"
         className="movies-search__switch-button"
       />
@@ -41,6 +40,9 @@ const MoviesSearch = ({ onSearch }) => {
 
 MoviesSearch.propTypes = {
   onSearch: PropTypes.func.isRequired,
+  onChangeShowShortFilms: PropTypes.func.isRequired,
+  queryValue: PropTypes.string,
+  showOnlyShort: PropTypes.bool,
 };
 
 export default MoviesSearch;

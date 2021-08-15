@@ -1,38 +1,51 @@
 import React from 'react';
 import './MoviesCard.css';
-import { bool, func, number, shape, string } from 'prop-types';
+import { bool, func, number, oneOfType, shape, string } from 'prop-types';
 import { minutesToFormatTime } from '../../utils/utils';
 import IconButton from '../IconButton/IconButton';
 
-const MoviesCard = ({ movie, onLike, isSavedMovie, onDelete }) => {
+const MoviesCard = ({ movie, onLike, onDelete }) => {
   const onClickLike = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    onLike(movie.id);
+    if (movie.isSaved) {
+      onDelete(movie._id);
+    } else {
+      onLike(movie);
+    }
   };
 
   const onClickDelete = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    onDelete(movie.id);
+    onDelete(movie._id);
   };
 
   return (
-    <a href={`#${movie.id}`} className="movie">
+    <a
+      href={movie.trailerLink || movie.trailer}
+      target="_blank"
+      rel="noreferrer"
+      className="movie"
+    >
       <img
         className="movie__image"
-        src={`https://api.nomoreparties.co${movie.image.url}`}
+        src={
+          movie?.image?.url
+            ? `https://api.nomoreparties.co${movie.image.url}`
+            : movie.image
+        }
         alt={movie.nameRU}
       />
       <div className="movie__description">
         <div className="movie__name-row">
           <h2 className="movie__name">{movie.nameRU}</h2>
-          {isSavedMovie ? (
+          {!onLike ? (
             <IconButton icon="cross" onClick={onClickDelete} />
           ) : (
             <IconButton
               icon="like"
-              isActive={movie.isLiked}
+              isActive={movie.isSaved}
               onClick={onClickLike}
             />
           )}
@@ -48,44 +61,46 @@ const MoviesCard = ({ movie, onLike, isSavedMovie, onDelete }) => {
 MoviesCard.propTypes = {
   movie: shape({
     id: number,
-    image: shape({
-      id: number,
-      name: string,
-      alternativeText: string,
-      caption: string,
-      width: number,
-      height: number,
-      formats: shape({
-        thumbnail: shape({
-          hash: string,
-          ext: string,
-          mime: string,
-          width: number,
-          height: number,
-          size: number,
-          path: null,
-          url: string,
+    image: oneOfType([
+      shape({
+        id: number,
+        name: string,
+        alternativeText: string,
+        caption: string,
+        width: number,
+        height: number,
+        formats: shape({
+          thumbnail: shape({
+            hash: string,
+            ext: string,
+            mime: string,
+            width: number,
+            height: number,
+            size: number,
+            path: null,
+            url: string,
+          }),
         }),
+        hash: string,
+        ext: string,
+        mime: string,
+        size: number,
+        url: string,
+        previewUrl: null,
+        provider: string,
+        provider_metadata: null,
+        created_at: string,
+        updated_at: string,
       }),
-      hash: string,
-      ext: string,
-      mime: string,
-      size: number,
-      url: string,
-      previewUrl: null,
-      provider: string,
-      provider_metadata: null,
-      created_at: string,
-      updated_at: string,
-    }),
+      string,
+    ]),
     duration: number,
-    isLiked: bool,
+    isSaved: bool,
     nameRU: string,
     description: string,
     trailerLink: string,
   }),
   onLike: func,
-  isSavedMovie: bool,
   onDelete: func,
 };
 
