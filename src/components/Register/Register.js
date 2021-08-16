@@ -45,6 +45,7 @@ const Register = ({ handleSignUp }) => {
               minLength={3}
               onChange={handleInput}
               value={form.name.value}
+              disabled={state.submitting}
             />
             <FormInput
               type="email"
@@ -55,6 +56,7 @@ const Register = ({ handleSignUp }) => {
               required
               onChange={handleInput}
               value={form.email.value}
+              disabled={state.submitting}
             />
             <FormInput
               type="password"
@@ -65,6 +67,7 @@ const Register = ({ handleSignUp }) => {
               required
               onChange={handleInput}
               value={form.password.value}
+              disabled={state.submitting}
             />
           </div>
           <div className="form__actions">

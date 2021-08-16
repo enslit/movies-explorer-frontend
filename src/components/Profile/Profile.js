@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './Profile.css';
 import Section from '../Section/Section';
 import Header from '../Header/Header';
@@ -8,7 +8,10 @@ import CurrentUserContext from '../../context/CurrentUserContext';
 
 const Profile = ({ handleSignOut, handleUpdateProfile }) => {
   const { currentUser } = useContext(CurrentUserContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isActiveSaveButton, setActiveSaveButton] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [profileForm, setProfileForm] = useState({
     name: currentUser.name,
     email: currentUser.email,
@@ -26,13 +29,35 @@ const Profile = ({ handleSignOut, handleUpdateProfile }) => {
   };
 
   const handleCancel = () => {
+    setErrorMessage('');
     setEditMode(false);
   };
 
   const handleSave = () => {
-    setEditMode(false);
-    handleUpdateProfile(profileForm);
+    setErrorMessage('');
+    setIsSubmitting(true);
+    handleUpdateProfile(profileForm)
+      .then(() => {
+        setEditMode(false);
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
+
+  useEffect(() => {
+    if (
+      currentUser.name !== profileForm.name ||
+      currentUser.email !== profileForm.email
+    ) {
+      setActiveSaveButton(true);
+    } else {
+      setActiveSaveButton(false);
+    }
+  }, [currentUser, profileForm]);
 
   return (
     <>
@@ -52,6 +77,7 @@ const Profile = ({ handleSignOut, handleUpdateProfile }) => {
                     value={profileForm.name}
                     onChange={changeInput}
                     name="name"
+                    disabled={isSubmitting}
                   />
                 ) : (
                   <span className="profile__value">{currentUser.name}</span>
@@ -67,12 +93,16 @@ const Profile = ({ handleSignOut, handleUpdateProfile }) => {
                     value={profileForm.email}
                     onChange={changeInput}
                     name="email"
+                    disabled={isSubmitting}
                   />
                 ) : (
                   <span className="profile__value">{currentUser.email}</span>
                 )}
               </li>
             </ul>
+            {errorMessage && (
+              <span className="profile__error-message">{errorMessage}</span>
+            )}
           </div>
         </Section>
       </main>
@@ -82,6 +112,8 @@ const Profile = ({ handleSignOut, handleUpdateProfile }) => {
         editMode={isEditMode}
         onClickSave={handleSave}
         onClickCancel={handleCancel}
+        isActiveSaveButton={isActiveSaveButton}
+        isSubmitting={isSubmitting}
       />
     </>
   );

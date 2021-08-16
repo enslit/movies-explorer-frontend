@@ -116,17 +116,22 @@ const App = () => {
   };
 
   const onUpdateUserProfile = (formData) => {
-    return appApi
-      .updateUserInfo(formData)
-      .then(() => {
-        setCurrentUser((prev) => ({
-          ...prev,
-          ...formData,
-        }));
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    return appApi.updateUserInfo(formData).then((response) => {
+      if (response?.message) {
+        throw new Error(response.message);
+      }
+
+      if (response?.bodyError) {
+        throw new Error(
+          response.bodyError.map((error) => error.message).toString()
+        );
+      }
+
+      setCurrentUser((prev) => ({
+        ...prev,
+        ...formData,
+      }));
+    });
   };
 
   useEffect(() => {
@@ -194,7 +199,9 @@ const App = () => {
       .finally(() => setAuthReady(true));
   }, []);
 
-  const appClasses = classNames('app', { app_loading: !appReady });
+  const appClasses = classNames('app', {
+    app_loading: !appReady || !authReady,
+  });
 
   return (
     <CurrentUserContext.Provider

@@ -9,12 +9,19 @@ const ProfileFooter = ({
   editMode,
   onClickSave,
   onClickCancel,
+  isActiveSaveButton,
+  isSubmitting,
 }) => (
   <footer className="profile-footer">
     {editMode ? (
       <>
-        <Button onClick={onClickSave}>Сохранить</Button>
-        <Button danger={true} onClick={onClickCancel}>
+        <Button
+          onClick={onClickSave}
+          disabled={!isActiveSaveButton || isSubmitting}
+        >
+          Сохранить
+        </Button>
+        <Button danger={true} onClick={onClickCancel} disabled={isSubmitting}>
           Отмена
         </Button>
       </>
@@ -35,6 +42,8 @@ ProfileFooter.propTypes = {
   signOut: PropTypes.func,
   editMode: PropTypes.bool,
   onClickCancel: PropTypes.func,
+  isActiveSaveButton: PropTypes.bool,
+  isSubmitting: PropTypes.func,
 };
 
 export default ProfileFooter;

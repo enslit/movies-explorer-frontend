@@ -42,6 +42,7 @@ const Login = ({ handleSignIn }) => {
               required
               onChange={handleInput}
               value={form.email.value}
+              disabled={state.submitting}
             />
             <FormInput
               type="password"
@@ -52,6 +53,7 @@ const Login = ({ handleSignIn }) => {
               required
               onChange={handleInput}
               value={form.password.value}
+              disabled={state.submitting}
             />
           </div>
           <div className="form__actions">

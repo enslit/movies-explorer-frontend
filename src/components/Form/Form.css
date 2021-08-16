@@ -45,6 +45,10 @@
     color: var(--color-danger);
 }
 
+.form__input:disabled {
+    opacity: .7;
+}
+
 .form__label {
     font-size: 10px;
     line-height: 12px;
