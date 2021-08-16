@@ -5,17 +5,18 @@ import Header from '../Header/Header';
 import ProfileFooter from './ProfileFooter/ProfileFooter';
 import PropTypes from 'prop-types';
 import CurrentUserContext from '../../context/CurrentUserContext';
+import useToast from '../../hooks/useToast';
 
 const Profile = ({ handleSignOut, handleUpdateProfile }) => {
   const { currentUser } = useContext(CurrentUserContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isActiveSaveButton, setActiveSaveButton] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const [profileForm, setProfileForm] = useState({
     name: currentUser.name,
     email: currentUser.email,
   });
+  const toast = useToast();
 
   const changeInput = (e) => {
     setProfileForm((prev) => ({
@@ -29,19 +30,17 @@ const Profile = ({ handleSignOut, handleUpdateProfile }) => {
   };
 
   const handleCancel = () => {
-    setErrorMessage('');
     setEditMode(false);
   };
 
   const handleSave = () => {
-    setErrorMessage('');
     setIsSubmitting(true);
     handleUpdateProfile(profileForm)
       .then(() => {
         setEditMode(false);
       })
       .catch((error) => {
-        setErrorMessage(error.message);
+        toast(error.message);
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -100,9 +99,6 @@ const Profile = ({ handleSignOut, handleUpdateProfile }) => {
                 )}
               </li>
             </ul>
-            {errorMessage && (
-              <span className="profile__error-message">{errorMessage}</span>
-            )}
           </div>
         </Section>
       </main>

@@ -18,6 +18,7 @@ import {
   SAVED_MOVIES_LOCAL_STORAGE_KEY,
 } from '../../utils/constants';
 import CurrentUserContext from '../../context/CurrentUserContext';
+import useToast from '../../hooks/useToast';
 
 const App = () => {
   const history = useHistory();
@@ -33,6 +34,12 @@ const App = () => {
     []
   );
   const [isFetching, setIsFetching] = useState(true);
+  const toast = useToast();
+
+  const errorHandler = (error) => {
+    console.error('error', error.message);
+    toast(error.message);
+  };
 
   const onSave = (movie) => {
     const prepare = {
@@ -60,7 +67,7 @@ const App = () => {
 
         setSavedMovies((prevState) => [...prevState, response]);
       })
-      .catch((error) => console.error('error', error.message));
+      .catch(errorHandler);
   };
 
   const onRemove = (id) => {
@@ -71,7 +78,7 @@ const App = () => {
           prevState.filter((movie) => movie._id !== id)
         );
       })
-      .catch((error) => console.error(error.message));
+      .catch(errorHandler);
   };
 
   const onSignIn = ({ email, password }) => {
@@ -110,9 +117,7 @@ const App = () => {
         setAuthorized(false);
         setCurrentUser(null);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch(errorHandler);
   };
 
   const onUpdateUserProfile = (formData) => {
@@ -157,7 +162,7 @@ const App = () => {
 
     if (requests.length > 0) {
       Promise.all(requests)
-        .catch((error) => console.error(error.message))
+        .catch(errorHandler)
         .finally(() => {
           setAppReady(true);
           setIsFetching(false);
@@ -195,7 +200,7 @@ const App = () => {
         setCurrentUser(response);
         setAuthorized(true);
       })
-      .catch((error) => console.log(error))
+      .catch(errorHandler)
       .finally(() => setAuthReady(true));
   }, []);
 

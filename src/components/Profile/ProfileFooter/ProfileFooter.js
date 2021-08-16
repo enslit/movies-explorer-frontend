@@ -43,7 +43,7 @@ ProfileFooter.propTypes = {
   editMode: PropTypes.bool,
   onClickCancel: PropTypes.func,
   isActiveSaveButton: PropTypes.bool,
-  isSubmitting: PropTypes.func,
+  isSubmitting: PropTypes.bool,
 };
 
 export default ProfileFooter;
