@@ -35,6 +35,7 @@ const Login = ({ handleSignIn }) => {
           <div className="form__body">
             <FormInput
               type="email"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
               name="email"
               label="Email"
               id="username-input"

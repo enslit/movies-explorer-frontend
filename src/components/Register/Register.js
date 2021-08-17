@@ -49,6 +49,7 @@ const Register = ({ handleSignUp }) => {
             />
             <FormInput
               type="email"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
               name="email"
               label="E-mail"
               id="email-input"
