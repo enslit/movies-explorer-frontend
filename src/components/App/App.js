@@ -14,6 +14,7 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
 import {
+  APP_NAME,
   MOVIES_LOCAL_STORAGE_KEY,
   SAVED_MOVIES_LOCAL_STORAGE_KEY,
 } from '../../utils/constants';
@@ -33,6 +34,7 @@ const App = () => {
     SAVED_MOVIES_LOCAL_STORAGE_KEY,
     []
   );
+  const [mergedMoviesData, setMergedMoviesData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
   const toast = useToast();
 
@@ -158,9 +160,9 @@ const App = () => {
       }
 
       if (savedMovies.length === 0) {
-        const request = appApi
-          .getMovies()
-          .then((result) => setSavedMovies(result.movies));
+        const request = appApi.getMovies().then((result) => {
+          setSavedMovies(result.movies);
+        });
 
         requests.push(request);
       }
@@ -180,8 +182,8 @@ const App = () => {
   }, [authorized]);
 
   useEffect(() => {
-    setMovies((prev) => {
-      return prev.map((movie) => {
+    setMergedMoviesData(() => {
+      return movies.map((movie) => {
         const savedMovie = savedMovies.find(
           ({ movieId }) => +movieId === movie.id
         );
@@ -193,7 +195,7 @@ const App = () => {
         };
       });
     });
-  }, [savedMovies, setMovies]);
+  }, [savedMovies, movies]);
 
   useEffect(() => {
     appApi
@@ -239,7 +241,7 @@ const App = () => {
               onRemove={onRemove}
             >
               <Movies
-                list={movies}
+                list={mergedMoviesData}
                 onSave={onSave}
                 onRemove={onRemove}
                 isFetching={isFetching}
