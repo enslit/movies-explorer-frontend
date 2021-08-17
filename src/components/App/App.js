@@ -200,7 +200,9 @@ const App = () => {
         setCurrentUser(response);
         setAuthorized(true);
       })
-      .catch(errorHandler)
+      .catch(({ message }) => {
+        console.info(message);
+      })
       .finally(() => setAuthReady(true));
   }, []);
 
