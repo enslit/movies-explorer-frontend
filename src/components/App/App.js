@@ -114,6 +114,12 @@ const App = () => {
       .then(() => {
         setMovies([]);
         setSavedMovies([]);
+        localStorage.removeItem(
+          `${APP_NAME}-${SAVED_MOVIES_LOCAL_STORAGE_KEY}-search`
+        );
+        localStorage.removeItem(
+          `${APP_NAME}-${MOVIES_LOCAL_STORAGE_KEY}-search`
+        );
         setAuthorized(false);
         setCurrentUser(null);
       })
