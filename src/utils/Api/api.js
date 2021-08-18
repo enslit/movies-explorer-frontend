@@ -6,7 +6,7 @@ const defaultHeaders = {
 };
 
 export const appApi = new MainApi({
-  baseUrl: 'https://api.enslit-movies.nomoredomains.club/api',
+  baseUrl: 'https://enslit.ru/api',
   headers: defaultHeaders,
   credentials: 'include',
 });
