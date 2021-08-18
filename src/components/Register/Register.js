@@ -6,17 +6,13 @@ import FormInput from '../Form/FormInput';
 import SubmitButton from '../Form/SubmitButton';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { appApi } from '../../utils/Api/api';
 
 const Register = ({ handleSignUp }) => {
-  const handleSubmit = ({ name, email, password }, setSubmitting) => {
-    return appApi
-      .register(name, email, password)
-      .then((response) => {
-        console.log(response);
-      })
+  const handleSubmit = ({ name, email, password }, setSubmitting, setError) => {
+    handleSignUp({ name, email, password })
       .catch((error) => {
         console.error(error);
+        setError(error.message);
       })
       .finally(() => setSubmitting(false));
   };
@@ -32,7 +28,7 @@ const Register = ({ handleSignUp }) => {
         password: '',
       }}
     >
-      {({ form, state, handleInput }) => (
+      {({ form, state, handleInput, error }) => (
         <>
           <div className="form__header">
             <Logo />
@@ -49,9 +45,11 @@ const Register = ({ handleSignUp }) => {
               minLength={3}
               onChange={handleInput}
               value={form.name.value}
+              disabled={state.submitting}
             />
             <FormInput
               type="email"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
               name="email"
               label="E-mail"
               id="email-input"
@@ -59,6 +57,7 @@ const Register = ({ handleSignUp }) => {
               required
               onChange={handleInput}
               value={form.email.value}
+              disabled={state.submitting}
             />
             <FormInput
               type="password"
@@ -69,9 +68,11 @@ const Register = ({ handleSignUp }) => {
               required
               onChange={handleInput}
               value={form.password.value}
+              disabled={state.submitting}
             />
           </div>
           <div className="form__actions">
+            {error && <span className="form__request-error">{error}</span>}
             <SubmitButton
               label="Зарегистрироваться"
               disabled={!state.valid}

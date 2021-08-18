@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import './Navigation.css';
-import { useAuth } from '../../hooks/useAuth';
 import { NavLink } from 'react-router-dom';
 import NavButton from '../NavButton/NavButton';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import CurrentUserContext from '../../context/CurrentUserContext';
 
 const Navigation = ({ isOpened, onClose }) => {
-  const { isLoggedIn } = useAuth();
+  const { authorized } = useContext(CurrentUserContext);
 
   const navigation = useMemo(() => {
-    return isLoggedIn ? (
+    return authorized ? (
       <>
         <li className="navigation__item navigation__item_home">
           <NavLink
@@ -54,19 +54,19 @@ const Navigation = ({ isOpened, onClose }) => {
         </li>
       </>
     );
-  }, [isLoggedIn]);
+  }, [authorized]);
 
   const classes = classNames('navigation', {
-    navigation_authorized: isLoggedIn,
+    navigation_authorized: authorized,
     navigation_visible: isOpened,
   });
 
   const classesList = classNames('navigation__list', {
-    navigation__list_authorized: isLoggedIn,
+    navigation__list_authorized: authorized,
   });
 
   const classesButtonClose = classNames('navigation__close', {
-    navigation__close_authorized: isLoggedIn,
+    navigation__close_authorized: authorized,
   });
 
   return (
@@ -77,7 +77,7 @@ const Navigation = ({ isOpened, onClose }) => {
         aria-label="Кнопка закрытия меню"
       />
       <ul className={classesList}>{navigation}</ul>
-      <NavButton isLoggedIn={isLoggedIn} />
+      <NavButton isLoggedIn={authorized} />
     </nav>
   );
 };

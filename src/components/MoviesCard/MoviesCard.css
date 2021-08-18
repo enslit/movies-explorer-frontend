@@ -20,12 +20,11 @@
 }
 
 .movie__image {
-    min-height: 203px;
+    height: 203px;
     width: 100%;
-    background-position: center;
-    background-size: cover;
-    border-radius: 9px 9px 0 0;
-    margin: 0;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
 }
 
 .movie__name-row {

@@ -1,8 +1,17 @@
-import { AppApi } from './AppApi';
+import { MainApi } from './MainApi';
+import MoviesApi from './MoviesApi';
 
-export const appApi = new AppApi({
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+};
+
+export const appApi = new MainApi({
   baseUrl: 'https://api.enslit-movies.nomoredomains.club/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: defaultHeaders,
+  credentials: 'include',
+});
+
+export const moviesApi = new MoviesApi({
+  baseUrl: 'https://api.nomoreparties.co/beatfilm-movies',
+  headers: defaultHeaders,
 });

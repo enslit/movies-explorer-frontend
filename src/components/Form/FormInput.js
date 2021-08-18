@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { func, string } from 'prop-types';
 
-function FormInput({ onChange, value, label, ...props }) {
+function FormInput({ onChange, value, label, ...props }, ref) {
   const [leave, setLeave] = useState(false);
   const errorRef = useRef();
-  const inputRef = useRef();
+  let inputRef = useRef();
+  if (ref) {
+    inputRef = ref;
+  }
 
   const handleBlur = () => {
     setLeave(true);
@@ -48,4 +51,4 @@ FormInput.propTypes = {
   label: string,
 };
 
-export default FormInput;
+export default React.forwardRef(FormInput);

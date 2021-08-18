@@ -47,7 +47,13 @@
     font-family: var(--font-main);
 }
 
-.profile__input:invalid {
+.profile__input:disabled {
+    opacity: .6;
+    pointer-events: none;
+}
+
+.profile__input:invalid,
+.profile__error-message {
     color: var(--color-danger);
 }
 

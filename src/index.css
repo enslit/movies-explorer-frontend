@@ -43,3 +43,22 @@ body {
     font-size: var(--font-size);
     line-height: 1.5;
 }
+
+.toast {
+    position: absolute;
+    height: 25px;
+    top: 0;
+    right: 0;
+    left: 0;
+    background-color: var(--color-danger);
+    color: var(--color-text);
+    transform: translateY(-25px);
+    transition: all 200ms ease-in-out;
+    opacity: 0;
+    text-align: center;
+}
+
+.toast_visible {
+    transform: translateY(0);
+    opacity: 1;
+}

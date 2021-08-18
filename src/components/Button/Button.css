@@ -42,5 +42,6 @@
 .button_disabled,
 .button_disabled:hover {
     cursor: not-allowed;
+    pointer-events: none;
     opacity: .5;
 }

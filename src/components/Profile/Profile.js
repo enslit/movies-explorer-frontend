@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './Profile.css';
 import Section from '../Section/Section';
-import { useAuth } from '../../hooks/useAuth';
 import Header from '../Header/Header';
 import ProfileFooter from './ProfileFooter/ProfileFooter';
+import PropTypes from 'prop-types';
+import CurrentUserContext from '../../context/CurrentUserContext';
+import useToast from '../../hooks/useToast';
 
-const Profile = () => {
-  const { user, signOut, updateUserProfile } = useAuth();
+const Profile = ({ handleSignOut, handleUpdateProfile }) => {
+  const { currentUser } = useContext(CurrentUserContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isActiveSaveButton, setActiveSaveButton] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
   const [profileForm, setProfileForm] = useState({
-    name: user.name,
-    email: user.email,
+    name: currentUser.name,
+    email: currentUser.email,
   });
+  const toast = useToast();
 
   const changeInput = (e) => {
     setProfileForm((prev) => ({
@@ -29,9 +34,29 @@ const Profile = () => {
   };
 
   const handleSave = () => {
-    setEditMode(false);
-    updateUserProfile(profileForm);
+    setIsSubmitting(true);
+    handleUpdateProfile(profileForm)
+      .then(() => {
+        setEditMode(false);
+      })
+      .catch((error) => {
+        toast(error.message);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
+
+  useEffect(() => {
+    if (
+      currentUser.name !== profileForm.name ||
+      currentUser.email !== profileForm.email
+    ) {
+      setActiveSaveButton(true);
+    } else {
+      setActiveSaveButton(false);
+    }
+  }, [currentUser, profileForm]);
 
   return (
     <>
@@ -39,7 +64,7 @@ const Profile = () => {
       <main>
         <Section className="profile">
           <div className="profile__info">
-            <h1 className="profile__great">Привет, {user.name}!</h1>
+            <h1 className="profile__great">Привет, {currentUser.name}!</h1>
             <ul className="profile__data-list">
               <li className="profile__field">
                 <span className="profile__label">Имя</span>
@@ -51,9 +76,10 @@ const Profile = () => {
                     value={profileForm.name}
                     onChange={changeInput}
                     name="name"
+                    disabled={isSubmitting}
                   />
                 ) : (
-                  <span className="profile__value">{user.name}</span>
+                  <span className="profile__value">{currentUser.name}</span>
                 )}
               </li>
               <li className="profile__field">
@@ -62,13 +88,15 @@ const Profile = () => {
                   <input
                     required
                     type="email"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                     className="profile__input"
                     value={profileForm.email}
                     onChange={changeInput}
                     name="email"
+                    disabled={isSubmitting}
                   />
                 ) : (
-                  <span className="profile__value">{user.email}</span>
+                  <span className="profile__value">{currentUser.email}</span>
                 )}
               </li>
             </ul>
@@ -76,14 +104,21 @@ const Profile = () => {
         </Section>
       </main>
       <ProfileFooter
-        signOut={signOut}
+        signOut={handleSignOut}
         onClickEdit={handleChangeEditMode}
         editMode={isEditMode}
         onClickSave={handleSave}
         onClickCancel={handleCancel}
+        isActiveSaveButton={isActiveSaveButton}
+        isSubmitting={isSubmitting}
       />
     </>
   );
+};
+
+Profile.propTypes = {
+  handleUpdateProfile: PropTypes.func,
+  handleSignOut: PropTypes.func,
 };
 
 export default Profile;

@@ -13,6 +13,7 @@ const Form = ({ initFormValues, onSubmit, children, ...props }) => {
   const [form, setForm] = useState(init);
   const [submitting, setSubmitting] = useState(false);
   const [valid, setValid] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInput = (value, name, valid) => {
     setForm({
@@ -24,10 +25,11 @@ const Form = ({ initFormValues, onSubmit, children, ...props }) => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     setSubmitting(true);
+    setError('');
 
     const values = {};
     Object.keys(form).forEach((field) => (values[field] = form[field].value));
-    onSubmit(values, setSubmitting);
+    onSubmit(values, setSubmitting, setError);
   };
 
   useEffect(() => {
@@ -43,7 +45,7 @@ const Form = ({ initFormValues, onSubmit, children, ...props }) => {
   return (
     <div className="form-container">
       <form noValidate onSubmit={handleSubmit} {...props}>
-        {children({ form, state, handleInput })}
+        {children({ form, state, handleInput, error })}
       </form>
     </div>
   );

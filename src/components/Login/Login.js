@@ -6,15 +6,13 @@ import FormInput from '../Form/FormInput';
 import SubmitButton from '../Form/SubmitButton';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
 
-const Login = () => {
-  const { signIn } = useAuth();
-
-  const handleSubmit = (values, setSubmitting) => {
-    signIn(values).catch((error) => {
+const Login = ({ handleSignIn }) => {
+  const handleSubmit = (values, setSubmitting, setError) => {
+    handleSignIn(values).catch((error) => {
       setSubmitting(false);
       console.error(error);
+      setError(error.message);
     });
   };
 
@@ -28,7 +26,7 @@ const Login = () => {
         password: '',
       }}
     >
-      {({ form, state, handleInput }) => (
+      {({ form, state, handleInput, error }) => (
         <>
           <div className="form__header">
             <Logo />
@@ -37,6 +35,7 @@ const Login = () => {
           <div className="form__body">
             <FormInput
               type="email"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
               name="email"
               label="Email"
               id="username-input"
@@ -44,6 +43,7 @@ const Login = () => {
               required
               onChange={handleInput}
               value={form.email.value}
+              disabled={state.submitting}
             />
             <FormInput
               type="password"
@@ -54,9 +54,11 @@ const Login = () => {
               required
               onChange={handleInput}
               value={form.password.value}
+              disabled={state.submitting}
             />
           </div>
           <div className="form__actions">
+            {error && <span className="form__request-error">{error}</span>}
             <SubmitButton
               label="Войти"
               disabled={!state.valid}

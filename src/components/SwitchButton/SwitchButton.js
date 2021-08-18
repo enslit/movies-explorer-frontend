@@ -4,12 +4,16 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const SwitchButton = ({ isActive, label, onChange, className }) => {
+  const handlerChange = () => {
+    onChange(!isActive);
+  };
+
   const classes = classNames('switch-button__switch', className, {
     'switch-button__switch_active': isActive,
   });
 
   return (
-    <div className="switch-button" onClick={onChange}>
+    <div className="switch-button" onClick={handlerChange}>
       <span className={classes} />
       <span className="switch-button__label">{label}</span>
     </div>
