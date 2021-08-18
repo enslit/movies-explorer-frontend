@@ -6,7 +6,7 @@ const defaultHeaders = {
 };
 
 export const appApi = new MainApi({
-  baseUrl: 'https://enslit.ru/api',
+  baseUrl: 'https://api.enslit.ru/api',
   headers: defaultHeaders,
   credentials: 'include',
 });
