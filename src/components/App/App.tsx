@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import Loader from '../Loader/Loader';
@@ -18,63 +18,84 @@ import {
   MOVIES_LOCAL_STORAGE_KEY,
   SAVED_MOVIES_LOCAL_STORAGE_KEY,
 } from '../../utils/constants';
-import CurrentUserContext from '../../context/CurrentUserContext';
+import CurrentUserContext, {
+  initialCurrentUserValue,
+} from '../../context/CurrentUserContext';
 import useToast from '../../hooks/useToast';
+import { MovieResponseBeatfilm } from '../../types/responses/BeatFilmApiResponses';
+import { MovieToSave } from '../../types/requests/MainMovieApiRequests';
+import {
+  LoginResponse,
+  RegisterResponse,
+  UpdateUserResponse,
+  UserInfo,
+} from '../../types/responses/UserApiResponses';
+import {
+  MovieMainApiResponse,
+  MoviesMainApiResponse,
+} from '../../types/responses/MovieMainApiResponses';
+import { MergedMovie } from '../../types/MergedMovie';
+import { mainApiResponseHandler } from '../../utils/mainApiResponseHandler';
+import {
+  LoginFormData,
+  RegisterFormData,
+  UserFormData,
+} from '../../types/requests/UserApiRequests';
 
 const App = () => {
-  const history = useHistory();
-  const [currentUser, setCurrentUser] = useState(
-    useContext(CurrentUserContext)
+  const history = useHistory<History>();
+  const userContext = useContext(CurrentUserContext);
+  const [currentUser, setCurrentUser] = useState<UserInfo>(
+    userContext.currentUser
   );
-  const [authorized, setAuthorized] = useState(false);
-  const [appReady, setAppReady] = useState(false);
-  const [authReady, setAuthReady] = useState(false);
-  const [movies, setMovies] = useLocalStorage(MOVIES_LOCAL_STORAGE_KEY, []);
-  const [savedMovies, setSavedMovies] = useLocalStorage(
+  const [authorized, setAuthorized] = useState<boolean>(false);
+  const [appReady, setAppReady] = useState<boolean>(false);
+  const [authReady, setAuthReady] = useState<boolean>(false);
+  const [movies, setMovies] = useLocalStorage<MovieResponseBeatfilm[]>(
+    MOVIES_LOCAL_STORAGE_KEY,
+    []
+  );
+  const [savedMovies, setSavedMovies] = useLocalStorage<MovieMainApiResponse[]>(
     SAVED_MOVIES_LOCAL_STORAGE_KEY,
     []
   );
-  const [mergedMoviesData, setMergedMoviesData] = useState([]);
-  const [isFetching, setIsFetching] = useState(true);
+  const [mergedMoviesData, setMergedMoviesData] = useState<MergedMovie[]>([]);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
   const toast = useToast();
 
-  const errorHandler = (error) => {
+  const errorHandler = (error: Error) => {
     console.error('error', error.message);
     toast(error.message);
   };
 
-  const onSave = (movie) => {
-    const prepare = {
-      country: movie.country,
-      director: movie.director,
+  const onSave = (movie: MovieResponseBeatfilm) => {
+    const prepare: MovieToSave = {
+      country: movie.country || 'Unknown',
+      director: movie.director || 'Unknown',
       duration: movie.duration,
       year: movie.year,
       description: movie.description,
       image: `https://api.nomoreparties.co${movie.image.url}`,
       thumbnail: `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}`,
-      trailer: movie.trailerLink,
+      trailer: movie.trailerLink || '#',
       movieId: movie.id,
       nameRU: movie.nameRU,
-      nameEN: movie.nameEN,
+      nameEN: movie.nameEN || '',
     };
 
     appApi
       .saveMovie(prepare)
+      .then(mainApiResponseHandler<MovieMainApiResponse>())
       .then((response) => {
-        if (response?.bodyError) {
-          throw new Error(
-            response.bodyError.map((error) => error.message).toString()
-          );
-        }
-
         setSavedMovies((prevState) => [...prevState, response]);
       })
       .catch(errorHandler);
   };
 
-  const onRemove = (id) => {
+  const onRemove = (id: string) => {
     appApi
       .removeMovie(id)
+      .then(mainApiResponseHandler<MovieMainApiResponse>())
       .then(() => {
         setSavedMovies((prevState) =>
           prevState.filter((movie) => movie._id !== id)
@@ -83,31 +104,25 @@ const App = () => {
       .catch(errorHandler);
   };
 
-  const onSignIn = ({ email, password }) => {
+  const onSignIn = ({ email, password }: LoginFormData): Promise<void> => {
     return appApi
       .auth(email, password)
+      .then(mainApiResponseHandler<LoginResponse>())
       .then((response) => {
-        if (!response.message || response.message !== 'Авторизован') {
-          throw new Error(response?.message || 'Ошибка');
-        }
-
-        return appApi.getUserProfile();
-      })
-      .then((userData) => {
-        setCurrentUser(userData);
+        setCurrentUser(response.data);
         setAuthorized(true);
       });
   };
 
-  const onSignUp = ({ name, email, password }) => {
-    return appApi.register(name, email, password).then((response) => {
-      if (response?.message) {
-        throw new Error(response.message);
-      }
-      setCurrentUser(response);
-      setAuthorized(true);
-      history.push('/movies');
-    });
+  const onSignUp = ({ name, email, password }: RegisterFormData) => {
+    return appApi
+      .register(name, email, password)
+      .then(mainApiResponseHandler<RegisterResponse>())
+      .then((response) => {
+        setCurrentUser(response.data);
+        setAuthorized(true);
+        history.push('/movies');
+      });
   };
 
   const onSignOut = () => {
@@ -123,28 +138,21 @@ const App = () => {
           `${APP_NAME}-${MOVIES_LOCAL_STORAGE_KEY}-search`
         );
         setAuthorized(false);
-        setCurrentUser(null);
+        setCurrentUser(initialCurrentUserValue);
       })
       .catch(errorHandler);
   };
 
-  const onUpdateUserProfile = (formData) => {
-    return appApi.updateUserInfo(formData).then((response) => {
-      if (response?.message) {
-        throw new Error(response.message);
-      }
-
-      if (response?.bodyError) {
-        throw new Error(
-          response.bodyError.map((error) => error.message).toString()
-        );
-      }
-
-      setCurrentUser((prev) => ({
-        ...prev,
-        ...formData,
-      }));
-    });
+  const onUpdateUserProfile = (formData: UserFormData) => {
+    return appApi
+      .updateUserInfo(formData)
+      .then(mainApiResponseHandler<UpdateUserResponse>())
+      .then(() => {
+        setCurrentUser((prev) => ({
+          ...prev,
+          ...formData,
+        }));
+      });
   };
 
   useEffect(() => {
@@ -154,15 +162,19 @@ const App = () => {
       if (movies.length === 0) {
         const request = moviesApi
           .getMovies()
+          .then(mainApiResponseHandler<MovieResponseBeatfilm[]>())
           .then((movies) => setMovies(movies));
 
         requests.push(request);
       }
 
       if (savedMovies.length === 0) {
-        const request = appApi.getMovies().then((result) => {
-          setSavedMovies(result.movies);
-        });
+        const request = appApi
+          .getMovies()
+          .then(mainApiResponseHandler<MoviesMainApiResponse>())
+          .then((result) => {
+            setSavedMovies(result);
+          });
 
         requests.push(request);
       }
@@ -185,7 +197,7 @@ const App = () => {
     setMergedMoviesData(() => {
       return movies.map((movie) => {
         const savedMovie = savedMovies.find(
-          ({ movieId }) => +movieId === movie.id
+          ({ movieId }) => +movieId === +movie.id
         );
 
         return {
@@ -200,11 +212,8 @@ const App = () => {
   useEffect(() => {
     appApi
       .getUserProfile()
+      .then(mainApiResponseHandler<UserInfo>())
       .then((response) => {
-        if (response.message) {
-          throw new Error(response.message);
-        }
-
         setCurrentUser(response);
         setAuthorized(true);
       })
@@ -219,13 +228,7 @@ const App = () => {
   });
 
   return (
-    <CurrentUserContext.Provider
-      value={{
-        currentUser,
-        setCurrentUser,
-        authorized,
-      }}
-    >
+    <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
       <div className={appClasses}>
         {appReady && authReady ? (
           <Switch>

@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 
 const PREFIX = 'movies-explorer-';
 
-function useLocalStorage(key, initialValue) {
+function useLocalStorage<T>(key: string, initialValue: T) {
   const prefixedKey = PREFIX + key;
-  const [value, setValue] = useState(() => {
+  const [value, setValue] = useState<T>(() => {
     const jsonValue = localStorage.getItem(prefixedKey);
 
     if (jsonValue != null) return JSON.parse(jsonValue);
@@ -20,7 +20,7 @@ function useLocalStorage(key, initialValue) {
     localStorage.setItem(prefixedKey, JSON.stringify(value));
   }, [prefixedKey, value]);
 
-  return [value, setValue];
+  return [value, setValue] as const;
 }
 
 export default useLocalStorage;
