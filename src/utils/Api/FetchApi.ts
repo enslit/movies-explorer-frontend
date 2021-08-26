@@ -28,7 +28,7 @@ export class FetchApi {
   _fetch<SuccessResponse, ErrorResponse>(
     url: string,
     method = 'GET',
-    body: object | null = null,
+    body: Record<string, any> | null = null,
     additionalHeaders = {}
   ): Promise<SuccessResponse | ErrorResponse> {
     const fetchUrl = `${this._baseUrl}/${url}`;

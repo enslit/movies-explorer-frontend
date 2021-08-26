@@ -42,7 +42,7 @@ import {
   UserFormData,
 } from '../../types/requests/UserApiRequests';
 
-const App = () => {
+const App = (): JSX.Element => {
   const history = useHistory<History>();
   const userContext = useContext(CurrentUserContext);
   const [currentUser, setCurrentUser] = useState<UserInfo>(
@@ -114,7 +114,11 @@ const App = () => {
       });
   };
 
-  const onSignUp = ({ name, email, password }: RegisterFormData) => {
+  const onSignUp = ({
+    name,
+    email,
+    password,
+  }: RegisterFormData): Promise<void> => {
     return appApi
       .register(name, email, password)
       .then(mainApiResponseHandler<RegisterResponse>())
@@ -125,7 +129,7 @@ const App = () => {
       });
   };
 
-  const onSignOut = () => {
+  const onSignOut = (): void => {
     appApi
       .logout()
       .then(() => {
@@ -143,7 +147,7 @@ const App = () => {
       .catch(errorHandler);
   };
 
-  const onUpdateUserProfile = (formData: UserFormData) => {
+  const onUpdateUserProfile = (formData: UserFormData): Promise<void> => {
     return appApi
       .updateUserInfo(formData)
       .then(mainApiResponseHandler<UpdateUserResponse>())
@@ -155,30 +159,34 @@ const App = () => {
       });
   };
 
-  useEffect(() => {
-    const requests = [];
+  const createRequests = (): Promise<any>[] => {
+    const requests: Promise<any>[] = [];
 
-    if (authorized) {
-      if (movies.length === 0) {
-        const request = moviesApi
+    if (movies.length === 0) {
+      requests.push(
+        moviesApi
           .getMovies()
           .then(mainApiResponseHandler<MovieResponseBeatfilm[]>())
-          .then((movies) => setMovies(movies));
+          .then((movies) => setMovies(movies))
+      );
+    }
 
-        requests.push(request);
-      }
-
-      if (savedMovies.length === 0) {
-        const request = appApi
+    if (savedMovies.length === 0) {
+      requests.push(
+        appApi
           .getMovies()
           .then(mainApiResponseHandler<MoviesMainApiResponse>())
           .then((result) => {
             setSavedMovies(result);
-          });
-
-        requests.push(request);
-      }
+          })
+      );
     }
+
+    return requests;
+  };
+
+  useEffect(() => {
+    const requests: Promise<any>[] = authorized ? createRequests() : [];
 
     if (requests.length > 0) {
       Promise.all(requests)
@@ -194,19 +202,19 @@ const App = () => {
   }, [authorized]);
 
   useEffect(() => {
-    setMergedMoviesData(() => {
-      return movies.map((movie) => {
-        const savedMovie = savedMovies.find(
-          ({ movieId }) => +movieId === +movie.id
-        );
+    const mergedMoviesList: MergedMovie[] = movies.map((movie) => {
+      const savedMovie = savedMovies.find(
+        ({ movieId }) => +movieId === +movie.id
+      );
 
-        return {
-          ...movie,
-          isSaved: !!savedMovie,
-          ...(savedMovie ? { _id: savedMovie._id } : {}),
-        };
-      });
+      return {
+        ...movie,
+        isSaved: !!savedMovie,
+        ...(savedMovie ? { _id: savedMovie._id } : {}),
+      };
     });
+
+    setMergedMoviesData(mergedMoviesList);
   }, [savedMovies, movies]);
 
   useEffect(() => {
@@ -223,7 +231,7 @@ const App = () => {
       .finally(() => setAuthReady(true));
   }, []);
 
-  const appClasses = classNames('app', {
+  const appClasses: string = classNames('app', {
     app_loading: !appReady || !authReady,
   });
 
