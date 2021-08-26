@@ -1,4 +1,5 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
     es2020: true,
@@ -6,10 +7,11 @@ module.exports = {
     jest: true,
   },
   extends: [
-    'standard',
+    'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
+    'prettier',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -24,4 +26,9 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
   },
   ignorePatterns: ['**/lib/*.js', '**/__tests__/*.js'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
 };
